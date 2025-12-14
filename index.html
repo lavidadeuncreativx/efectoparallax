@@ -9,24 +9,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
   <style>
-    /* --- Variables de Color --- */
     :root {
-      --bg-color: #0023e4; /* Azul vibrante. Cámbialo a #e40000 para rojo */
+      --bg-color: #0023e4;
       --text-color: #ffffff;
     }
 
-    /* --- Estilos Generales --- */
     body, html {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden; /* Evita el scroll */
+      overflow: hidden;
       background-color: var(--bg-color);
-      font-family: 'Abril Fatface', cursive; /* Tipografía estilo serif gruesa */
+      font-family: 'Abril Fatface', cursive;
     }
 
-    /* --- Contenedor Principal y Efecto Grainy --- */
     #scene-container {
       position: relative;
       width: 100%;
@@ -34,12 +31,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* Imagen de ruido para el efecto "grainy" */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
       background-blend-mode: overlay;
     }
 
-    /* --- Estilos de los Textos --- */
     .parallax-text {
       position: absolute;
       width: 80%;
@@ -47,101 +42,87 @@
       font-size: 3.5rem;
       line-height: 1.1;
       color: var(--text-color);
-      
-      /* Efecto de textura en el texto */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
       background-clip: text;
       -webkit-background-clip: text;
-      color: transparent; /* Hacemos el color transparente para ver la textura */
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Sombra sutil para contraste */
-      
-      /* Transición suave para el movimiento y la opacidad */
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-      opacity: 0; /* Inicialmente invisibles */
-      pointer-events: none; /* Para que no interfieran con el tacto */
+      opacity: 0;
+      pointer-events: none;
     }
 
-    /* --- Posiciones Iniciales --- */
-    /* Texto Central (visible al inicio) */
-    #text-center {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-      z-index: 2;
-    }
+    #text-center { opacity: 1; transform: translateX(0) scale(1); z-index: 2; }
+    #text-left { transform: translateX(-120%) scale(0.8) rotate(-5deg); }
+    #text-right { transform: translateX(120%) scale(0.8) rotate(5deg); }
 
-    /* Texto Izquierda (escondido a la izquierda) */
-    #text-left {
-      transform: translateX(-120%) scale(0.8) rotate(-5deg);
-    }
-
-    /* Texto Derecha (escondido a la derecha) */
-    #text-right {
-      transform: translateX(120%) scale(0.8) rotate(5deg);
-    }
-
-    /* --- Estados Activos (cuando se muestran) --- */
     .parallax-text.active {
       opacity: 1;
       transform: translateX(0) scale(1) rotate(0deg) !important;
-      z-index: 10; /* Se pone al frente */
+      z-index: 10;
     }
     
-    /* Clase para ocultar los que no están activos */
     .parallax-text.inactive {
        opacity: 0;
        z-index: 1;
     }
-    
-    /* Mensaje para PC */
-    #desktop-warning {
-      display: none;
+
+    /* --- ESTILOS DEL BOTÓN DE INICIO --- */
+    #start-overlay {
       position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.9);
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-family: sans-serif;
-      font-size: 0.9rem;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 35, 228, 0.95);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
     }
+
+    #start-btn {
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      font-family: 'Abril Fatface', cursive;
+      color: #0023e4;
+      background: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
     
-    @media (hover: hover) and (pointer: fine) {
-      #desktop-warning {
-        display: block;
-      }
+    #start-instruction {
+        color: white;
+        margin-top: 20px;
+        font-family: sans-serif;
+        font-size: 0.9rem;
+        opacity: 0.8;
     }
 
   </style>
 </head>
 <body>
 
+  <div id="start-overlay">
+    <button id="start-btn">EXPERIMENTAR</button>
+    <p id="start-instruction">Dale click y permite el acceso a los sensores</p>
+  </div>
+
   <div id="scene-container">
-    <div id="desktop-warning">⚠️ Abre esto en tu celular para ver el efecto.</div>
-
-    <div id="text-left" class="parallax-text">
-      ¿Por qué no ver más allá?
-    </div>
-
-    <div id="text-center" class="parallax-text active">
-      No todo lo que ves es lo único que existe
-    </div>
-
-    <div id="text-right" class="parallax-text">
-      Todo es cuestión de perspectiva
-    </div>
+    <div id="text-left" class="parallax-text">¿Por qué no ver más allá?</div>
+    <div id="text-center" class="parallax-text active">No todo lo que ves es lo único que existe</div>
+    <div id="text-right" class="parallax-text">Todo es cuestión de perspectiva</div>
   </div>
 
   <script>
-    // Referencias a los elementos de texto
     const textLeft = document.getElementById('text-left');
     const textCenter = document.getElementById('text-center');
     const textRight = document.getElementById('text-right');
     const allTexts = [textLeft, textCenter, textRight];
+    const overlay = document.getElementById('start-overlay');
+    const startBtn = document.getElementById('start-btn');
 
-    // Función para actualizar qué texto se muestra
     function updateState(activeText) {
       allTexts.forEach(text => {
         if (text === activeText) {
@@ -150,64 +131,48 @@
         } else {
           text.classList.remove('active');
           text.classList.add('inactive');
-          // Reseteamos la transformación de los inactivos a su posición original
           if(text.id === 'text-left') text.style.transform = '';
           if(text.id === 'text-right') text.style.transform = '';
         }
       });
     }
 
-    // Función principal que maneja el evento del giroscopio
     function handleOrientation(event) {
-      // 'gamma' es la inclinación izquierda/derecha (eje X).
-      // Va de aprox. -90 (izquierda total) a 90 (derecha total).
       const tiltX = event.gamma; 
-
-      // Definimos un umbral de inclinación para activar los cambios (ej. 25 grados)
-      const threshold = 25;
+      const threshold = 20; // Sensibilidad
 
       if (tiltX < -threshold) {
-        // Inclinado a la IZQUIERDA -> Mostrar texto izquierdo
         updateState(textLeft);
       } else if (tiltX > threshold) {
-        // Inclinado a la DERECHA -> Mostrar texto derecho
         updateState(textRight);
       } else {
-        // En el CENTRO (entre -25 y 25 grados) -> Mostrar texto central
         updateState(textCenter);
       }
     }
 
-    // Solicitud de permisos para iOS 13+
-    function requestPermission() {
+    // --- LÓGICA DE PERMISOS PARA IOS ---
+    startBtn.addEventListener('click', () => {
+      // 1. Ocultar el botón
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display = 'none'; }, 500);
+
+      // 2. Pedir permisos
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // Esto es para iOS 13+
         DeviceOrientationEvent.requestPermission()
           .then(permissionState => {
             if (permissionState === 'granted') {
               window.addEventListener('deviceorientation', handleOrientation);
             } else {
-              alert("Se necesita permiso de orientación para el efecto.");
+              alert("Necesitas dar permiso para ver la magia 🔮");
             }
           })
           .catch(console.error);
       } else {
-        // Para Android y versiones anteriores de iOS no se necesita permiso explícito
+        // Para Android y otros
         window.addEventListener('deviceorientation', handleOrientation);
       }
-    }
-
-    // Intentamos iniciar el evento. En iOS, esto debe ser disparado por una acción del usuario (como un click).
-    // Para esta demo, lo intentamos al cargar, pero en una web real, pon un botón "Iniciar Experiencia".
-    try {
-      requestPermission();
-       // Fallback simple para navegadores que no requieren permiso explícito
-      if (!window.DeviceOrientationEvent || typeof DeviceOrientationEvent.requestPermission !== 'function') {
-         window.addEventListener('deviceorientation', handleOrientation);
-      }
-    } catch (e) {
-      console.log("Error al intentar acceder a los sensores: " + e);
-    }
-
+    });
   </script>
 </body>
 </html>
